@@ -8,8 +8,8 @@ variables:
 
   CONTAINER_REPO_ASIA_STAG: 968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/stag/ktn-wallet-iapi
   CONTAINER_REPO_ASIA_PROD: 968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/prod/ktn-wallet-iapi
-  NAMESPACE_STAG: ktn-api-stag  
-  NAMESPACE_PROD: ktn-api-prod  
+  NAMESPACE_STAG: ktn-iapi-stag  
+  NAMESPACE_PROD: ktn-iapi-prod  
   HELM_VALUE_FOLDER: katana
   FULLREPO_ASIA_DEV: $CONTAINER_REPO_ASIA_DEV:$CI_COMMIT_SHA
   FULLREPO_ASIA_TEST: $CONTAINER_REPO_ASIA_TEST:$CI_COMMIT_SHA
