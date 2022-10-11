@@ -81,6 +81,7 @@ build_stag:
         sed -i -e "s#\[CI_COMMIT_REF_NAME\]#$CI_COMMIT_REF_NAME#g" skaffold.yaml
         cat skaffold.yaml
       fi
+    - cp -f $PRIVATE_WALLET_STAG ./privates.json
     - /usr/local/bin/skaffold build -p profile-stag --file-output=build_sync.json
   only:
     refs:
