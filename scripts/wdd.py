@@ -31,8 +31,12 @@ class StoreWallet:
         self._load()
 
     def _load(self):
-        _privates = json.loads(os.getenv(f'PRIVATE_KEYS', '[]'))
-
+        _privates = []
+        with open(os.getenv('PRIVATE_PATH')) as f:
+            _privates = json.loads(f.read())
+            f.close()
+        if not _privates:
+            raise Exception("Not found _privates")
         self.accounts = {}
         for _private in _privates:
             _worker = AccountWorker(

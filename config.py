@@ -53,7 +53,7 @@ class WalletConfig:
     # Authentication
     AUTH_ADDRESS = os.getenv('AUTH_ADDRESS', '')
 
-    CELERY_IMPORTS = ['tasks']
+    CELERY_IMPORTS = ['web3_tasks']
     ENABLE_UTC = True
 
     # Config celery worker
@@ -69,4 +69,3 @@ class WalletConfig:
     LOCK_TIME = 60 * 5
     BSC_RPC_URI = os.getenv('BSC_RPC_URI')
     ETH_RPC_URI = os.getenv('ETH_RPC_URI')
-    BROKER_URL = os.getenv('BROKER_URL')
