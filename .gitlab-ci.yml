@@ -95,7 +95,7 @@ deploy_APP_NAME_DAPP_stag:
   stage: deploy
   image:  alpine/helm:3.2.1
   tags:
-  - esol-stag-test
+  - esol-stag
   script:
     - *predeploy
     - *kubectl_config
@@ -121,7 +121,7 @@ deploy_NFT_CONFIRM_TX_QUEUE_stag:
   stage: deploy
   image:  alpine/helm:3.2.1
   tags:
-  - esol-stag-test
+  - esol-stag
   script:
     - *predeploy
     - *kubectl_config
