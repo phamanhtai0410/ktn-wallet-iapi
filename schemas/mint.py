@@ -11,7 +11,7 @@ class ItemSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    rarity = fields.Str(required=True)
+    rarity = fields.Int(required=True)
     cid = fields.Str(required=True)
 
 

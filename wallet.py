@@ -27,6 +27,7 @@ class Wallet(Task):
 
         _eth_providers = [WalletConfig.ETH_RPC_URI]
         _bsc_providers = [WalletConfig.BSC_RPC_URI]
+        debug("_bsc_providers", _bsc_providers)
         self._chain = {
             ChainCodes.ETHEREUM_CHAIN: StoreWallet(
                 providers=_eth_providers.copy(),

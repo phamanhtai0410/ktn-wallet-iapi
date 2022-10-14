@@ -30,9 +30,8 @@ class Config:
     CELERY_QUEUES = os.getenv('CELERY_QUEUES')
 
     CELERY_ROUTES = {
-        'worker.task_on_payment': {'queue': 'nft-payment-queue'},
-        'worker.task_record_tx': {'queue': 'nft-payment-queue'},
-        'worker.task_confirm_tx': {'queue': 'nft-confirm-tx-queue'}
+        'worker.task_mint_nft': {'queue': 'ktn-wallet-tx-queue'},
+        'worker.task_get_transaction_receipt_for_order': {'queue': 'wallet-receipt-tx-queue'}
     }
     PUBLIC_PATH = os.getenv('PUBLIC_PATH')
     REDIS_CLUSTER = json.loads(os.getenv('REDIS_CLUSTER'))
@@ -41,6 +40,7 @@ class Config:
     BSC_RPC_URI = os.getenv('BSC_RPC_URI')
     ETH_RPC_URI = os.getenv('ETH_RPC_URI')
     ASSETS = json.loads(os.getenv('ASSETS', '{}'))
+    NFT_IAPI = os.getenv('NFT_IAPI')
 
 
 class WalletConfig:
@@ -62,7 +62,8 @@ class WalletConfig:
     CELERY_QUEUES = os.getenv('CELERY_QUEUES')
 
     CELERY_ROUTES = {
-        'worker.mint_order': {'queue': 'nft-payment-queue'}
+        'worker.task_get_transaction_receipt_for_order': {'queue': 'wallet-receipt-tx-queue'},
+        'worker.task_mint_nft': {'queue': 'ktn-wallet-tx-queue'}
     }
 
     REDLOCK_REDIS = json.loads(os.getenv('REDLOCK_REDIS', '[]'))

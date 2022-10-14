@@ -37,6 +37,7 @@ class StoreWallet:
             f.close()
         if not _privates:
             raise Exception("Not found _privates")
+        debug(f"Total accounts {len(_privates)}")
         self.accounts = {}
         for _private in _privates:
             _worker = AccountWorker(

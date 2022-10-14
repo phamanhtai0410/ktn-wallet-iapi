@@ -22,8 +22,11 @@ class MintHelper:
             contract_address=get(form_data, 'contract_address'),
             address=get(form_data, 'address')
         )
+        _task_id = str(_task_id)
+        print(_task_id, type(_task_id))
         LogWalletModel.insert_one({
             'task_id': _task_id,
-            'form_data': form_data
+            'form_data': form_data,
+            'created_by': 'wallet_iapi'
         }, worker=True)
         return _task_id
