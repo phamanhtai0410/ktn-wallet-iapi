@@ -27,5 +27,3 @@ _contract = _web3.eth.contract(
 _tx_info = _contract.events.MintOrder().processReceipt(_txn_receipt)
 
 print(_tx_info[0].args.returnMintingOrder)
-
-
