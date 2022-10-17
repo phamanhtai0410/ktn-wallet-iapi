@@ -54,6 +54,7 @@ def task_mint_nft(address, items, order_id, contract_address, *args, **kwargs):
         signed_tx = _account.account.signTransaction(tx)
         _txn = _account.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
         _tx_hash = _txn.hex()
+        debug(f"Log tx hash: {_tx_hash}")
         _update['tx_hash'] = _tx_hash
     except Exception as e:
         sentry_sdk.capture_exception()
