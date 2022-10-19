@@ -52,7 +52,8 @@ def task_record_exchange(address, amount, log_id, signature):
                     'updated_time': dt_utcnow()
                 },
                 '$inc': {
-                    'total_points': - amount
+                    'total_points': - amount,
+                    'total_withdraw': amount
                 }
             }, return_document=ReturnDocument.AFTER)
             _change_log['after'] = _after_user
@@ -67,7 +68,8 @@ def task_record_exchange(address, amount, log_id, signature):
                         'updated_time': dt_utcnow()
                     },
                     '$inc': {
-                        'total_points': amount
+                        'total_points': amount,
+                        'total_withdraw': - amount
                     }
                 })
                 _change_log['return_point'] = amount

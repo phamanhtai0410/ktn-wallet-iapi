@@ -37,7 +37,8 @@ class Config:
         'worker.task_record_exchange': {'queue': 'ktn-wallet-pending-tx-queue'},
         'worker.task_get_transaction_receipt_for_order': {'queue': 'wallet-receipt-tx-queue'},
         'worker.task_get_transaction_receipt_for_exchange': {'queue': 'wallet-receipt-tx-queue'},
-        'worker.task_transfer': {'queue': 'ktn-wallet-tx-queue'}
+        'worker.task_transfer': {'queue': 'ktn-wallet-tx-queue'},
+        'worker.task_add_point': {'queue': 'ktn-point-queue'},
     }
     PUBLIC_PATH = os.getenv('PUBLIC_PATH')
     REDIS_CLUSTER = json.loads(os.getenv('REDIS_CLUSTER'))
