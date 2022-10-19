@@ -5,3 +5,4 @@
         -
 """
 from .mint import task_mint_nft
+from .transfer import task_transfer

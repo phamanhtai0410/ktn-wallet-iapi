@@ -10,6 +10,7 @@ import motor
 from flask_pymongo import PyMongo
 import motor.motor_asyncio
 from rediscluster import RedisCluster
+from socket_io_emitter import Emitter
 from web3 import Web3
 
 from blockchain import Blockchain
@@ -38,6 +39,8 @@ redis_cluster = RedisCluster(
     decode_responses=True,
     skip_full_coverage_check=True
 )
+socket_io = Emitter(Config.REDIS_CLUSTER[0])
+
 from lib import HTTPSecurity
 
 security = HTTPSecurity(redis=redis_cluster, auth_address=Config.AUTH_ADDRESS)

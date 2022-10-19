@@ -11,12 +11,14 @@ import requests
 import sentry_sdk
 from pydash import get
 
-from blockchain.abi import nft_abi
+from blockchain.abi import nft_abi, erc20_abi
 from config import Config
 from connect import web3_providers
 from enums.order import Chains
+from enums.status import Status
+from helper.socket import SocketEmitter
 from lib.logger import debug
-from models import LogWalletModel, NFTModel
+from models import LogWalletModel, ExchangeLogModel
 from worker import worker
 
 
@@ -63,18 +65,6 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
 
             _update['MintOrder'] = _token_ids
 
-            #
-            # NFTModel.insert_many(
-            #     [
-            #         {
-            #             'token_id': get(x, "tokenId"),
-            #             'metadata': f'https://{get(x, "cid")}.ipfs.w3s.link/',
-            #             "rarity": get(x, "rarity"),
-            #             "address": _to.lower(),
-            #             'contract_address': get(_txn_receipt, 'from', '').lower()
-            #         }
-            #     ] for x in _token_ids)
-
             res = requests.put(f'{Config.NFT_IAPI}/iapi/order', json={
                 'order_id': order_id,
                 'tx_hash': tx_hash,
@@ -96,3 +86,43 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
     }, obj=_update)
 
     return f"Done: get log for order#{order_id}"
+
+
+@worker.task(name="worker.task_get_transaction_receipt_for_exchange", rate_limit='500/s')
+def task_get_transaction_receipt_for_exchange(tx_hash, log_id, address):
+    _update = {
+        'updated_by': 'task_get_transaction_receipt_for_exchange'
+    }
+
+    try:
+        _web3 = web3_providers[Chains.BSC_CHAIN]
+        _txn_receipt = _web3.eth.wait_for_transaction_receipt(tx_hash)
+
+        _update['status'] = Status.OKE if get(_txn_receipt, 'status') else Status.ERROR
+
+        if get(_txn_receipt, 'status') != 1:
+            _update['msg'] = 'Pending check tx hash.'
+            sentry_sdk.capture_message(
+                f"Failed: transfer log#{log_id} with tx#{tx_hash}. Please re-check.")
+
+    except Exception as e:
+        sentry_sdk.capture_message(
+            f"Warning: Worker can not check status of tx#{tx_hash} for order#{log_id}. Please re-check.")
+        sentry_sdk.capture_exception()
+        _update['exception'] = str(e)
+
+        traceback.print_exc()
+    ExchangeLogModel.update_one({
+        'log_id': log_id
+    }, obj=_update)
+    result = {
+        'status': get(_update, 'status'),
+        'tx_hash': get(_update, 'tx_hash'),
+        'msg': get(_update, 'msg')
+    }
+    SocketEmitter.emit(
+        room_id=address,
+        event='EXCHANGE',
+        value=result
+    )
+    return f"Done: get log for tx#{tx_hash}"

@@ -46,6 +46,9 @@ class Wallet(Task):
         """
         _chain = get(kwargs, 'chain')
         debug(f'before start {_chain}')
+        if not _chain:
+            _chain = ChainCodes.BSC_CHAIN
+            kwargs['chain'] = _chain
 
         if not _chain:
             raise Exception("Task - Noy found chain")

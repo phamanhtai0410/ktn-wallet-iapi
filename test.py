@@ -10,7 +10,7 @@ from pydash import get
 from web3 import Web3
 from web3.datastructures import AttributeDict
 
-tx_hash = '0x55f6df4d499054ca16b4a3d1c1a6fb67abcc265f9d73655543b26f9bca41a70b'
+tx_hash = '0x0a932534a8a787d422d5ee5b69ee2d8b30b2cb7aba2d739caf13d6bdc62c0486'
 
 nft_abi = None
 with open("blockchain/abi/data/NFT.json") as file:
