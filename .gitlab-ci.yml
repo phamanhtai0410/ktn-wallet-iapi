@@ -6,6 +6,7 @@ variables:
   APP_NAME_WALLET_TX_QUEUE: ktn-wallet-tx-queue
   APP_NAME_WALLET_RECEIPT_TX_QUEUE: ktn-wallet-receipt-tx-queue
   APP_NAME_WALLET_PENDING_TX_QUEUE: ktn-wallet-pending-tx-queue
+  APP_NAME_WALLET_POINT_QUEUE: ktn-wallet-point-queue
   CONTAINER_REPO_ASIA_STAG: 968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/stag/ktn-wallet-iapi
   CONTAINER_REPO_ASIA_PROD: 968557029040.dkr.ecr.ap-southeast-1.amazonaws.com/prod/ktn-wallet-iapi
   NAMESPACE_STAG: ktn-iapi-stag  
@@ -16,7 +17,7 @@ variables:
   FULLREPO_ASIA_STAG: $CONTAINER_REPO_ASIA_STAG:$CI_COMMIT_SHA
   FULLREPO_ASIA_PROD: $CONTAINER_REPO_ASIA_PROD:$CI_COMMIT_SHA
   HELM_VALUE: ${CI_COMMIT_REF_NAME}
-  HELM_VERSION: 3.0.0
+  HELM_VERSION: 3.0.1
   HELM_CRONJOB_VERSION: 0.1.9
   AWS_REGION: ap-southeast-1
   GITLAB_TOKEN: $GITLAB_RUNNER_TOKEN
@@ -82,7 +83,7 @@ build_stag:
         sed -i -e "s#\[CI_COMMIT_REF_NAME\]#$CI_COMMIT_REF_NAME#g" skaffold.yaml
         cat skaffold.yaml
       fi
-    - cp -f $PRIVATE_WALLET_STAG ./privates.json
+  #  - cp -f $PRIVATE_WALLET_STAG ./privates.json
     - /usr/local/bin/skaffold build -p profile-stag --file-output=build_sync.json
   only:
     refs:
@@ -212,6 +213,30 @@ deploy_WALLET_PENDING_TX_QUEUE_stag:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.24.0/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.38.0/skaffold-linux-amd64 && chmod +x skaffold &&  mv skaffold /usr/local/bin
     - /usr/local/bin/skaffold deploy -p profile-${APP_NAME_WALLET_PENDING_TX_QUEUE}-stag   -a build_sync.json
+
+  only:
+    refs:
+      - stag
+deploy_WALLET_POINT_QUEUE_stag:
+  stage: deploy
+  image:  alpine/helm:3.2.1
+  tags:
+  - esol-stag
+  script:
+    - *predeploy
+    - *kubectl_config
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "stag" ]; then
+        sed -i -e "s#\[NAMESPACE\]#$NAMESPACE_STAG#g" skaffold.yaml
+        sed -i -e "s#\[APP_NAME\]#$APP_NAME_WALLET_POINT_QUEUE#g" skaffold.yaml
+        sed -i -e "s#\[CONTAINER_REPO\]#$CONTAINER_REPO_ASIA_STAG#g" skaffold.yaml
+        sed -i -e "s#\[CI_COMMIT_REF_NAME\]#$CI_COMMIT_REF_NAME#g" skaffold.yaml
+      fi
+    - git clone https://read-token:$GITLAB_TOKEN@gitlab.rinznetwork.com/rinz-io-devops/helm-value/$HELM_VALUE_FOLDER/$IMAGE_NAME.git
+    - mv $IMAGE_NAME/${APP_NAME_WALLET_POINT_QUEUE}-stag.yaml .
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.24.0/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+    - curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.38.0/skaffold-linux-amd64 && chmod +x skaffold &&  mv skaffold /usr/local/bin
+    - /usr/local/bin/skaffold deploy -p profile-${APP_NAME_WALLET_POINT_QUEUE}-stag   -a build_sync.json
 
   only:
     refs:
