@@ -7,20 +7,21 @@
 from pymongo import ReturnDocument
 
 from lib import dt_utcnow
-from models import UserModel, PointLogModel
+from models import PointLogModel, PointModel
 from worker import worker
 
 
 @worker.task(name="worker.task_add_point", rate_limit='500/s')
-def task_add_point(address, amount, log):
+def task_add_point(address, amount, log, event):
     _log = {
         **log,
         'address': address,
         'amount': amount,
         'created_by': 'task_add_point'
     }
-    _before_user = UserModel.col.find_one_and_update(filter={
-        'address': address
+    _before_user = PointModel.col.find_one_and_update(filter={
+        'address': address,
+        'event': event
     }, update={
         '$set': {
             'updated_time': dt_utcnow(),

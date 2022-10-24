@@ -24,7 +24,8 @@ class PointResource(Resource):
             address=get(form_data, 'address').lower(),
             amount=get(form_data, 'amount'),
             action=get(form_data, 'action'),
-            ref_id=get(form_data, 'ref_id')
+            ref_id=get(form_data, 'ref_id'),
+            event=get(form_data, 'event')
         )
 
         return {
