@@ -20,7 +20,6 @@ def task_add_point(address, amount, log, event):
         'amount': amount,
         'created_by': 'task_add_point'
     }
-    debug(f"point name: {PointModel.col.full_name}")
     _before_user = PointModel.col.find_one_and_update(filter={
         'address': address,
         'event': event
@@ -32,7 +31,7 @@ def task_add_point(address, amount, log, event):
         "$inc": {
             'total_points': amount
         }
-    }, return_document=ReturnDocument.BEFORE)
+    }, return_document=ReturnDocument.BEFORE, upsert=True)
 
     _log['before'] = _before_user
     PointLogModel.insert_one(_log)
