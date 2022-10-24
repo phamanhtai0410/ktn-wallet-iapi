@@ -7,6 +7,7 @@
 from pymongo import ReturnDocument
 
 from lib import dt_utcnow
+from lib.logger import debug
 from models import PointLogModel, PointModel
 from worker import worker
 
@@ -19,6 +20,7 @@ def task_add_point(address, amount, log, event):
         'amount': amount,
         'created_by': 'task_add_point'
     }
+    debug(f"point name: {PointModel.col.full_name}")
     _before_user = PointModel.col.find_one_and_update(filter={
         'address': address,
         'event': event
