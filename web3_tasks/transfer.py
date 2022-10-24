@@ -23,7 +23,7 @@ _w3 = Web3()
 
 
 @worker.task(name="worker.task_transfer", rate_limit='500/s')
-def task_transfer(address, amount, token, log_id, *args, **kwargs):
+def task_transfer(address, amount, token, log_id, event, *args, **kwargs):
     debug("on message")
     _task_id = task_transfer.request.id
     _row = {
@@ -34,7 +34,8 @@ def task_transfer(address, amount, token, log_id, *args, **kwargs):
             'address': address,
             'amount': amount,
             'token': token,
-            'log_id': log_id
+            'log_id': log_id,
+            'event': event
         }
     }
     try:

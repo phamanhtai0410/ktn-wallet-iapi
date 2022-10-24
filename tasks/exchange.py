@@ -16,36 +16,40 @@ from helper.sign import SignHelper
 from helper.socket import SocketEmitter
 from lib import dt_utcnow
 from lib.logger import debug
-from models import UserModel, ExchangeLogModel
+from models import PointModel, ExchangeLogModel
 from web3_tasks.transfer import task_transfer
 from worker import worker
 
 
 @worker.task(name="worker.task_record_exchange", rate_limit='500/s')
-def task_record_exchange(address, amount, log_id, signature):
+def task_record_exchange(address, amount, log_id, signature, event):
     _change_log = {
         'log_id': log_id,
         'amount': amount,
         'address': address.lower(),
         'signature': signature,
+        'event': event,
         'created_by': 'task_record_exchange'
     }
 
     try:
 
-        _user = UserModel.find_one({
-            'address': address.lower()
+        _user = PointModel.find_one({
+            'address': address.lower(),
+            'event': event
         })
         _change_log['before'] = _user
 
         if get(_user, 'total_points') < amount:
             _result = {
                 'status': Status.FAIL,
-                'msg': "Account not enough point."
+                'msg': "Account not enough point.",
+                'event': event
             }
         else:
-            _after_user = UserModel.col.find_one_and_update({
-                'address': address.lower()
+            _after_user = PointModel.col.find_one_and_update({
+                'address': address.lower(),
+                'event': event
             }, update={
                 '$set': {
                     'updated_by': 'task_record_exchange',
@@ -60,8 +64,9 @@ def task_record_exchange(address, amount, log_id, signature):
 
             if get(_after_user, 'total_points') < 0:
                 # return points to the user from the above query
-                UserModel.col.find_one_and_update({
-                    'address': address.lower()
+                PointModel.col.find_one_and_update({
+                    'address': address.lower(),
+                    'event': event
                 }, update={
                     '$set': {
                         'updated_by': 'task_record_exchange',
@@ -76,7 +81,8 @@ def task_record_exchange(address, amount, log_id, signature):
 
                 _result = {
                     'status': Status.FAIL,
-                    'msg': "Account not enough point."
+                    'msg': "Account not enough point.",
+                    'event': event
                 }
             else:
                 debug("Run task task_transfer")
@@ -84,7 +90,8 @@ def task_record_exchange(address, amount, log_id, signature):
                     address=address,
                     amount=amount,
                     token=Config.USDT_ADDRESS,
-                    log_id=log_id
+                    log_id=log_id,
+                    event=event
                 )
                 _result = {
                     'status': Status.TRANSFERRING
@@ -95,7 +102,8 @@ def task_record_exchange(address, amount, log_id, signature):
 
         _result = {
             'status': Status.ERROR,
-            'msg': str(e)
+            'msg': str(e),
+            'event': event
         }
 
     _change_log['result'] = _result

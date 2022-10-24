@@ -21,7 +21,8 @@ class ExchangePointResource(Resource):
         _log_id = ExchangeHelper.transfer_point(
             address=get(form_data, 'address').lower(),
             amount=get(form_data, 'amount'),
-            signature=get(form_data, 'signature')
+            signature=get(form_data, 'signature'),
+            event=get(form_data,'event')
         )
         return {
             'log_id': _log_id

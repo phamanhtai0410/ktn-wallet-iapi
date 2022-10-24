@@ -14,3 +14,4 @@ class ExchangeSchema(Schema):
     address = fields.Str(required=True)
     amount = fields.Float(required=True)
     signature = fields.Dict(required=True)
+    event = fields.Str(required=True)
