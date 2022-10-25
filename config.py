@@ -49,7 +49,7 @@ class Config:
     ASSETS = json.loads(os.getenv('ASSETS', '{}'))
     NFT_IAPI = os.getenv('NFT_IAPI')
     debug(ASSETS)
-    USDT_ADDRESS = get(ASSETS, 'BSC_CHAIN.USDT')
+    USDT_ADDRESS = get(ASSETS, 'USDT_ADDRESS')
     debug(USDT_ADDRESS)
 
 
