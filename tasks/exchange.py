@@ -86,6 +86,11 @@ def task_record_exchange(address, amount, log_id, signature, event):
                 }
             else:
                 debug("Run task task_transfer")
+                PointModel.set_rank(
+                    event=event,
+                    address=address,
+                    point=get(_after_user, 'total_points')
+                )
                 task_transfer.delay(
                     address=address,
                     amount=amount,

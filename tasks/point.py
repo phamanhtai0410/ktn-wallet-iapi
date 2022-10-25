@@ -4,6 +4,7 @@
         -
         -
 """
+from pydash import get
 from pymongo import ReturnDocument
 
 from lib import dt_utcnow
@@ -32,7 +33,11 @@ def task_add_point(address, amount, log, event):
             'total_points': amount
         }
     }, return_document=ReturnDocument.BEFORE, upsert=True)
-
+    PointModel.set_rank(
+        event=event,
+        address=address,
+        point=get(_before_user, 'total_points', 0) + amount
+    )
     _log['before'] = _before_user
     PointLogModel.insert_one(_log)
     return f"Done add point for {address}"
