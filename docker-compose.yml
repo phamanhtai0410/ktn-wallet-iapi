@@ -1,30 +1,67 @@
 version: "3"
-
 services:
-  serivce:
-    image: micro-api
+
+  ktn-wallet-iapi:
+    image: ktn-wallet-iapi
     build: .
     restart: always
     volumes:
       - ./:/webapps
-
     ports:
-      - 6006:5005
+      - 6008:5005
     networks:
       - base-network
+    command: gunicorn --bind 0.0.0.0:5005 --workers=1 main:app --log-level=debug -c conf/gunicorn.py --timeout 0
 
-    command: supervisord -n -c /etc/supervisor.d/service.conf
-
-  worker:
-    image: worker-micro-api
+  ktn-wallet-dapp:
+    image: ktn-wallet-dapp
     build: .
     restart: always
     volumes:
       - ./:/webapps
     networks:
       - base-network
+    command: celery --app worker worker -Q katana-dapp-wallet-iapi-queue -l INFO -c 4
 
-    command: supervisord -n -c /etc/supervisor.d/worker.conf
+  ktn-wallet-tx-queue:
+    image: ktn-wallet-tx-queue
+    build: .
+    restart: always
+    volumes:
+      - ./:/webapps
+    networks:
+      - base-network
+    command: celery --app wallet worker -Q ktn-wallet-tx-queue -l INFO -c 4
+  
+  ktn-wallet-receipt-tx-queue:
+    image: ktn-wallet-receipt-tx-queue 
+    build: .
+    restart: always
+    volumes:
+      - ./:/webapps
+    networks:
+      - base-network
+    command: celery --app worker worker -Q wallet-receipt-tx-queue -l INFO -c 4
+
+  ktn-wallet-pending-tx-queue:
+    image:  ktn-wallet-pending-tx-queue
+    build: .
+    restart: always
+    volumes:
+      - ./:/webapps
+    networks:
+      - base-network
+    command: celery --app worker worker -Q ktn-wallet-pending-tx-queue -l INFO -c 4
+  
+  ktn-wallet-point-queue:
+    image:  ktn-wallet-point-queue
+    build: .
+    restart: always
+    volumes:
+      - ./:/webapps
+    networks:
+      - base-network
+    command: celery --app worker worker -Q ktn-point-queue -l INFO -c 4
 
 networks:
   base-network:
