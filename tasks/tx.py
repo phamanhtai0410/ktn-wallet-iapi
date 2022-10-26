@@ -117,8 +117,8 @@ def task_get_transaction_receipt_for_exchange(tx_hash, log_id, address):
     }, obj=_update)
     result = {
         'status': get(_update, 'status'),
-        'tx_hash': get(_update, 'tx_hash'),
-        'msg': get(_update, 'msg')
+        'tx_hash': get(_update, 'tx_hash') or tx_hash,
+        'msg': get(_update, 'msg') or "Successfully"
     }
     SocketEmitter.emit(
         room_id=address,
