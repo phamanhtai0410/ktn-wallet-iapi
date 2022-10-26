@@ -14,7 +14,7 @@ class PointSchema(Schema):
         unknown = EXCLUDE
 
     address = fields.Str(required=True)
-    amount = fields.Float(required=True, validate=validate.Range(min=0))
+    amount = fields.Number(required=True, validate=validate.Range(min=0))
     ref_id = fields.Str(required=True)
     action = fields.Str(required=True, validate=NotBlank())
     event = fields.Str(required=True)
