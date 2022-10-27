@@ -14,7 +14,7 @@ services:
     command: gunicorn --bind 0.0.0.0:5005 --workers=1 main:app --log-level=debug -c conf/gunicorn.py --timeout 0
 
   ktn-wallet-dapp:
-    image: ktn-wallet-dapp
+    image: ktn-wallet-iapi
     build: .
     restart: always
     volumes:
@@ -34,7 +34,7 @@ services:
     command: celery --app wallet worker -Q ktn-wallet-tx-queue -l INFO -c 4
   
   ktn-wallet-receipt-tx-queue:
-    image: ktn-wallet-receipt-tx-queue 
+    image: ktn-wallet-iapi
     build: .
     restart: always
     volumes:
@@ -44,7 +44,7 @@ services:
     command: celery --app worker worker -Q wallet-receipt-tx-queue -l INFO -c 4
 
   ktn-wallet-pending-tx-queue:
-    image:  ktn-wallet-pending-tx-queue
+    image:  ktn-wallet-iapi
     build: .
     restart: always
     volumes:
@@ -54,7 +54,7 @@ services:
     command: celery --app worker worker -Q ktn-wallet-pending-tx-queue -l INFO -c 4
   
   ktn-wallet-point-queue:
-    image:  ktn-wallet-point-queue
+    image: ktn-wallet-iapi
     build: .
     restart: always
     volumes:
