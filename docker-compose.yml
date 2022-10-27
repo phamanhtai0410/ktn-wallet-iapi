@@ -3,7 +3,9 @@ services:
 
   ktn-wallet-iapi:
     image: ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -15,7 +17,9 @@ services:
 
   ktn-wallet-dapp:
     image: ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -25,7 +29,9 @@ services:
 
   ktn-wallet-tx-queue:
     image: ktn-wallet-tx-queue
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -35,7 +41,9 @@ services:
   
   ktn-wallet-receipt-tx-queue:
     image: ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -45,7 +53,9 @@ services:
 
   ktn-wallet-pending-tx-queue:
     image:  ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -55,7 +65,9 @@ services:
   
   ktn-wallet-point-queue:
     image: ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
