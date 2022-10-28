@@ -45,7 +45,7 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
                 web3_providers[Chains.BSC_CHAIN].toChecksumAddress(get(_txn_receipt, 'from')),
                 abi=nft_abi
             )
-            _tx_info = _contract.events.MintOrder().processReceipt(_txn_receipt)
+            _tx_info = _contract.events.MintOrderForDev().processReceipt(_txn_receipt)
 
             debug(f'info: {_tx_info}')
 
