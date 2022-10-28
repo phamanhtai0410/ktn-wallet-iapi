@@ -3,7 +3,9 @@ services:
 
   ktn-wallet-iapi:
     image: ktn-wallet-iapi
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -14,8 +16,10 @@ services:
     command: gunicorn --bind 0.0.0.0:5005 --workers=1 main:app --log-level=debug -c conf/gunicorn.py --timeout 0
 
   ktn-wallet-dapp:
-    image: ktn-wallet-dapp
-    build: .
+    image: ktn-wallet-iapi
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -24,8 +28,10 @@ services:
     command: celery --app worker worker -Q katana-dapp-wallet-iapi-queue -l INFO -c 4
 
   ktn-wallet-tx-queue:
-    image: ktn-wallet-tx-queue
-    build: .
+    image: ktn-wallet-iapi
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -34,8 +40,10 @@ services:
     command: celery --app wallet worker -Q ktn-wallet-tx-queue -l INFO -c 4
   
   ktn-wallet-receipt-tx-queue:
-    image: ktn-wallet-receipt-tx-queue 
-    build: .
+    image: ktn-wallet-iapi
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -44,8 +52,10 @@ services:
     command: celery --app worker worker -Q wallet-receipt-tx-queue -l INFO -c 4
 
   ktn-wallet-pending-tx-queue:
-    image:  ktn-wallet-pending-tx-queue
-    build: .
+    image:  ktn-wallet-iapi
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
@@ -54,8 +64,10 @@ services:
     command: celery --app worker worker -Q ktn-wallet-pending-tx-queue -l INFO -c 4
   
   ktn-wallet-point-queue:
-    image:  ktn-wallet-point-queue
-    build: .
+    image: ktn-wallet-iapi
+    build: 
+      context: .
+      dockerfile: Dockerfile-server
     restart: always
     volumes:
       - ./:/webapps
