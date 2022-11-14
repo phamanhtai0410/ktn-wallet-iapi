@@ -59,9 +59,8 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
             _token_ids = [{
                 'token_id': _token_id,
                 'rarity': _rarity,
-                'cid': _cid,
-                'type': _type
-            } for (_token_id, _rarity, _cid, _type) in _items]
+                'cid': _cid
+            } for (_token_id, _rarity, _cid) in _items]
 
             _update['MintOrder'] = _token_ids
 
