@@ -13,7 +13,7 @@ class ItemSchema(Schema):
 
     rarity = fields.Int(required=True)
     cid = fields.Str(required=True)
-    type = fields.Int(required=True)
+    # type = fields.Int(required=True)
 
 
 class MintSchema(Schema):
