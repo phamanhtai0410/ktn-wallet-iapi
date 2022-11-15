@@ -157,11 +157,6 @@
                         "internalType": "uint8",
                         "name": "rarity",
                         "type": "uint8"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "cid",
-                        "type": "string"
                     }
                 ],
                 "indexed": false,
@@ -199,11 +194,6 @@
                         "internalType": "uint8",
                         "name": "rarity",
                         "type": "uint8"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "cid",
-                        "type": "string"
                     }
                 ],
                 "indexed": false,
@@ -662,6 +652,19 @@
     },
     {
         "inputs": [],
+        "name": "OPEN_BOX_ROLE",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "OPEN_NFT_ROLE",
         "outputs": [
             {
@@ -715,6 +718,19 @@
     {
         "inputs": [
             {
+                "internalType": "string[]",
+                "name": "_cids",
+                "type": "string[]"
+            }
+        ],
+        "name": "addCidsForNewRarities",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
@@ -752,6 +768,40 @@
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "boxRequests",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "targetBlock",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint16",
+                "name": "count",
+                "type": "uint16"
+            },
+            {
+                "internalType": "uint8",
+                "name": "rarity",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256[]",
                 "name": "ids",
                 "type": "uint256[]"
@@ -760,6 +810,25 @@
         "name": "burn",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "name": "cidPerRarity",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -977,6 +1046,11 @@
                 "type": "uint8"
             },
             {
+                "internalType": "string[]",
+                "name": "_cids",
+                "type": "string[]"
+            },
+            {
                 "internalType": "address",
                 "name": "_daapCreator",
                 "type": "address"
@@ -1040,21 +1114,9 @@
     {
         "inputs": [
             {
-                "components": [
-                    {
-                        "internalType": "uint8",
-                        "name": "rarity",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "cid",
-                        "type": "string"
-                    }
-                ],
-                "internalType": "struct CharacterTokenDetails.MintingOrder[]",
-                "name": "_mintingOrders",
-                "type": "tuple[]"
+                "internalType": "uint8[]",
+                "name": "_rarities",
+                "type": "uint8[]"
             },
             {
                 "internalType": "address",
@@ -1075,21 +1137,9 @@
     {
         "inputs": [
             {
-                "components": [
-                    {
-                        "internalType": "uint8",
-                        "name": "rarity",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "cid",
-                        "type": "string"
-                    }
-                ],
-                "internalType": "struct CharacterTokenDetails.MintingOrder[]",
-                "name": "_mintingOrders",
-                "type": "tuple[]"
+                "internalType": "uint8[]",
+                "name": "_rarities",
+                "type": "uint8[]"
             },
             {
                 "internalType": "address",
@@ -1578,6 +1628,24 @@
     {
         "inputs": [],
         "name": "unpause",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint8",
+                "name": "_rarity",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "_cid",
+                "type": "string"
+            }
+        ],
+        "name": "updateCidOfExistingRarity",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

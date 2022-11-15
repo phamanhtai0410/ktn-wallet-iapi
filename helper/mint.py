@@ -20,7 +20,8 @@ class MintHelper:
             order_id=get(form_data, 'order_id'),
             items=get(form_data, 'items'),
             contract_address=get(form_data, 'contract_address'),
-            address=get(form_data, 'address')
+            address=get(form_data, 'address'),
+            nft_type=get(form_data,'nft_type', 'raw_nft')
         )
         _task_id = str(_task_id)
         print(_task_id, type(_task_id))

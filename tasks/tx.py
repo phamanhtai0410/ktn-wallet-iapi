@@ -11,7 +11,7 @@ import requests
 import sentry_sdk
 from pydash import get
 
-from blockchain.abi import nft_abi, erc20_abi
+from blockchain.abi import nft_abi, nft_box_abi
 from config import Config
 from connect import web3_providers
 from enums.order import Chains
@@ -23,7 +23,7 @@ from worker import worker
 
 
 @worker.task(name="worker.task_get_transaction_receipt_for_order", rate_limit='500/s')
-def task_get_transaction_receipt_for_order(tx_hash, order_id):
+def task_get_transaction_receipt_for_order(tx_hash, order_id, nft_type='raw_nft'):
     _update = {
         'updated_by': 'task_get_transaction_receipt_for_order'
     }
@@ -40,11 +40,17 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
             debug(f'{get(_txn_receipt, "from")}')
             debug(f"{web3_providers[Chains.BSC_CHAIN].toChecksumAddress(get(_txn_receipt, 'from'))}")
             debug(f"{nft_abi}")
+            if nft_type == 'box':
+                _contract = _web3.eth.contract(
+                    web3_providers[Chains.BSC_CHAIN].toChecksumAddress(get(_txn_receipt, 'from')),
+                    abi=nft_box_abi
+                )
+            else:
+                _contract = _web3.eth.contract(
+                    web3_providers[Chains.BSC_CHAIN].toChecksumAddress(get(_txn_receipt, 'from')),
+                    abi=nft_abi
+                )
 
-            _contract = _web3.eth.contract(
-                web3_providers[Chains.BSC_CHAIN].toChecksumAddress(get(_txn_receipt, 'from')),
-                abi=nft_abi
-            )
             _tx_info = _contract.events.MintOrderForDev().processReceipt(_txn_receipt)
 
             debug(f'info: {_tx_info}')
@@ -53,16 +59,23 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
                 raise Exception("Failed: Cannot get info of order.")
 
             _tx_info = _tx_info[0]
-            _items = _tx_info.args.returnMintingOrder
-            _to = _tx_info.args.to
 
-            _token_ids = [{
-                'token_id': _token_id,
-                'rarity': _rarity,
-                'cid': _cid
-            } for (_token_id, _rarity, _cid) in _items]
+            if nft_type == 'box':
+                _token_ids = _token_ids = [{
+                    'token_id': id
+                } for (id, index, price, is_opened, owner_by) in _tx_info.args.returnMintingOrder]
+                _to = _tx_info.args.to
+            else:
 
-            _update['MintOrder'] = _token_ids
+                _items = _tx_info.args.returnMintingOrder
+                _to = _tx_info.args.to
+
+                _token_ids = [{
+                    'token_id': _token_id,
+                    'rarity': _rarity
+                } for (_token_id, _rarity) in _items]
+
+                _update['MintOrder'] = _token_ids
 
             res = requests.put(f'{Config.NFT_IAPI}/iapi/order', json={
                 'order_id': order_id,
@@ -70,7 +83,9 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id):
                 'token_ids': _token_ids,
                 'address': _to.lower()
             }, timeout=10)
+
             debug(res.text)
+
             if res.status_code != 200:
                 sentry_sdk.capture_message(f"Failed: Send completed order#{order_id}. Error: {res.text}")
 
