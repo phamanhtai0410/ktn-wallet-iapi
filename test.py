@@ -4,26 +4,7 @@
         -
         -
 """
-import json
+li = [(1, (2, 3))]
 
-from pydash import get
-from web3 import Web3
-from web3.datastructures import AttributeDict
-
-tx_hash = '0x0a932534a8a787d422d5ee5b69ee2d8b30b2cb7aba2d739caf13d6bdc62c0486'
-
-nft_abi = None
-with open("blockchain/abi/data/NFT.json") as file:
-    nft_abi = json.load(file)  # load contract info as JSON
-    file.close()
-
-_web3 = Web3(Web3.HTTPProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', request_kwargs={'timeout': 60}))
-_txn_receipt = _web3.eth.wait_for_transaction_receipt(tx_hash)
-print(_txn_receipt)
-_contract = _web3.eth.contract(
-    _web3.toChecksumAddress(get(_txn_receipt, 'from')),
-    abi=nft_abi
-)
-_tx_info = _contract.events.MintOrder().processReceipt(_txn_receipt)
-
-print(_tx_info[0].args.returnMintingOrder)
+l, (k, n) = li[0]
+print(l, k, n)

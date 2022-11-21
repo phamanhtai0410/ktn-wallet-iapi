@@ -72,8 +72,10 @@ def task_get_transaction_receipt_for_order(tx_hash, order_id, nft_type='raw_nft'
 
                 _token_ids = [{
                     'token_id': _token_id,
-                    'rarity': _rarity
-                } for (_token_id, _rarity) in _items]
+                    'rarity': _rarity,
+                    'mesh_index': _mesh_index,
+                    'mesh_material': _mesh_material
+                } for (_token_id, (_rarity, _mesh_index, _mesh_material)) in _items]
 
                 _update['MintOrder'] = _token_ids
 
