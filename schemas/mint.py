@@ -12,8 +12,8 @@ class ItemSchema(Schema):
         unknown = EXCLUDE
 
     rarity = fields.Int(required=True)
-    # cid = fields.Str(required=True)
-    # type = fields.Int(required=True)
+    mesh_index = fields.Int(required=True)
+    mesh_material = fields.Int(required=True)
 
 
 class MintSchema(Schema):

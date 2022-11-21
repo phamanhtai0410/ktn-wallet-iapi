@@ -52,7 +52,11 @@ def task_mint_nft(address, items, order_id, contract_address, nft_type='nft', *a
                 abi=nft_abi
             )
             debug(f'{items}, {_public_address} {order_id}')
-            _items = [get(item, 'rarity') for item in items]
+            _items = [{
+                'rarity': get(item, 'rarity'),
+                'meshIndex': get(item, 'mesh_index'),
+                'meshMaterial': get(item, 'mesh_material')
+            } for item in items]
             debug(f"_items {_items}, {_public_address} {_account.web3.toBytes(text=order_id)}")
             tx = contract.functions.mintOrderForDev(
                 _items,
