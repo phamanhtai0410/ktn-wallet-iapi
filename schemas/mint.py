@@ -12,8 +12,8 @@ class ItemSchema(Schema):
         unknown = EXCLUDE
 
     rarity = fields.Int(required=True)
-    cid = fields.Str(required=True)
-    type = fields.Int(required=True)
+    mesh_index = fields.Int(required=True)
+    mesh_material = fields.Int(required=True)
 
 
 class MintSchema(Schema):
@@ -24,3 +24,4 @@ class MintSchema(Schema):
     items = fields.List(fields.Nested(ItemSchema), required=True)
     order_id = fields.Str(required=True)
     contract_address = fields.Str(required=True)
+    nft_type = fields.Str(default='raw_nft')
