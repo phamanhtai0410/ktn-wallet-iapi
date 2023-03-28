@@ -133,9 +133,9 @@ deploy-prod-server1:
     - ssh-keyscan -H $PROD_SERVER_1_IP >> ~/.ssh/known_hosts
   script:
     - sed -i -e "s#\[IMAGE_REPO\]#$FULLREPO_ASIA_PROD#g" docker-compose.yml 
-    - scp docker-compose.yml  root@${PROD_SERVER_1_IP}:/data/cicd/ktn-task-api/docker-compose.yml 
+    - scp docker-compose.yml  root@${PROD_SERVER_1_IP}:/data/cicd/ktn-walllet-iapi/docker-compose.yml 
     - ssh root@$PROD_SERVER_1_IP "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
-    - ssh root@$PROD_SERVER_1_IP "cd /data/cicd/ktn-task-api/ && docker-compose up --build -d"
+    - ssh root@$PROD_SERVER_1_IP "cd /data/cicd/ktn-wallet-iapi/ && docker-compose up --build -d"
   only:
     - master
 
