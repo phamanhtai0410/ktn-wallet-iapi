@@ -54,7 +54,6 @@ stages:
   helm repo add helm-template-cronjob s3://esol-helm-template/cronjob
   helm pull s3://esol-helm-template/helm-template-$HELM_VERSION.tgz --untar=true
   helm pull s3://esol-helm-template/cronjob/helm-template-cronjob-$HELM_CRONJOB_VERSION.tgz --untar=true
-
 build_stag:
   image: docker:19.03.1
   tags:
